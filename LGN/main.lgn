@@ -1,5 +1,0 @@
-# Questo è un commento
-let x = 1 + 2;
-let y = 8;
-
-exit(x);
