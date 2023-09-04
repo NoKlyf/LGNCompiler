@@ -1,0 +1,4 @@
+let x = 3 + 4;
+let y = 6;
+
+exit(x);
