@@ -1,5 +1,5 @@
 # LGNCompiler
-A compiler for my own programming language called LGN
+A compiler for my own programming language called LGN.
 The compiler is written in C++
 
 # Usage
