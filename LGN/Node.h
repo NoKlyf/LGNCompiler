@@ -1,24 +1,39 @@
 #pragma once
-#include "Token.h";
+#include "Token.h"
 #include <variant>
 #include <vector>
 
 namespace lgn::node
 {
 	struct Expr;
+	struct Statement;
 
 	struct BinExprAdd {
 		Expr *left;
 		Expr *right;
 	};
 
-	/*struct BinExprMul {
+	struct BinExprSub {
+		Expr* left;
+		Expr* right;
+	};
+
+	struct BinExprMul {
 		Expr *left;
 		Expr *right;
-	};*/
+	};
+
+	struct BinExprDiv {
+		Expr* left;
+		Expr* right;
+	};
 
 	struct BinExpr {
-		BinExprAdd* expr; // Make std::variant<BinExprAdd*, BinExprMul*> expr;
+		std::variant<BinExprAdd*, BinExprSub*, BinExprMul*, BinExprDiv*> expr;
+	};
+
+	struct Scope {
+		std::vector<Statement*> statements;
 	};
 
 	struct TermInt {
@@ -29,8 +44,12 @@ namespace lgn::node
 		Token tok_id;
 	};
 
+	struct TermParen {
+		Expr* expr;
+	};
+
 	struct Term {
-		std::variant<TermInt*, TermId*> term;
+		std::variant<TermInt*, TermId*, TermParen*> term;
 	};
 
 	struct Expr {
@@ -46,8 +65,13 @@ namespace lgn::node
 		Expr *expr;
 	};
 
+	struct StatementIf {
+		Expr* expr;
+		Scope* scope;
+	};
+
 	struct Statement {
-		std::variant<StatementExit*, StatementLet*> statement;
+		std::variant<StatementExit*, StatementLet*, StatementIf*, Scope*> statement;
 	};
 
 	struct Program {
