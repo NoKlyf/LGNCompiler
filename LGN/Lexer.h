@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 
+std::optional<int> bin_prec(TokenType type);
+
 namespace lgn
 {
 	class Lexer {
