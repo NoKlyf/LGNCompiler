@@ -1,4 +1,15 @@
-let x = 3 + 4;
-let y = 6;
+let x = (10 - 2 * 3) / 2;
 
-exit(x);
+if (x) {
+	let y = 2;
+
+	if (y) {
+		exit(y);
+	}
+
+	exit(x);
+}
+
+let y = 8;
+
+exit(y);
