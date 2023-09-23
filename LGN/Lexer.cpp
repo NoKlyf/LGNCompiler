@@ -1,6 +1,21 @@
 #include "Lexer.h"
 using namespace lgn;
 
+std::optional<int> bin_prec(TokenType type)
+{
+    switch (type)
+    {
+    case TokenType::tok_plus:
+    case TokenType::tok_min:
+        return 0;
+    case TokenType::tok_mul:
+    case TokenType::tok_div:
+        return 1;
+    default:
+        return {};
+    }
+}
+
 std::vector<Token> Lexer::tokenize()
 {
     std::vector<Token> tokens;
@@ -15,17 +30,19 @@ std::vector<Token> Lexer::tokenize()
             }
 
             if (buf == "exit") {
-                tokens.push_back({ .type = TokenType::tok_kw, .value = "exit"});
+                tokens.push_back({ .type = TokenType::tok_kw, .value = "exit" });
                 buf.clear();
-                continue;
             } else if (buf == "let") {
-                tokens.push_back({ .type = TokenType::tok_kw, .value = "let"});
+                tokens.push_back({ .type = TokenType::tok_kw, .value = "let" });
                 buf.clear();
-                continue;
+            } else if (buf == "if") {
+                tokens.push_back({ .type = TokenType::tok_kw, .value = "if"});
+                buf.clear();
+            } else {
+                tokens.push_back({ .type = TokenType::tok_id, .value = buf });
+                buf.clear();
             }
 
-            tokens.push_back({ .type = TokenType::tok_id, .value = buf });
-            buf.clear();
         } else if (std::isdigit(peek().value())) {
             buf.push_back(consume());
 
@@ -41,6 +58,12 @@ std::vector<Token> Lexer::tokenize()
         } else if (peek().value() == ')') {
             consume();
             tokens.push_back({ .type = TokenType::tok_rparen });
+        } else if (peek().value() == '{') {
+            consume();
+            tokens.push_back({ .type = TokenType::tok_lbrace });
+        } else if (peek().value() == '}') {
+            consume();
+            tokens.push_back({ .type = TokenType::tok_rbrace });
         } else if (peek().value() == ';') {
             consume();
             tokens.push_back({ .type = TokenType::tok_semi });
@@ -52,15 +75,22 @@ std::vector<Token> Lexer::tokenize()
         } else if (peek().value() == '+') {
             consume();
             tokens.push_back({ .type = TokenType::tok_plus });
-        }
-        else if (peek().value() == '#') {
+        } else if (peek().value() == '-') {
+            consume();
+            tokens.push_back({ .type = TokenType::tok_min });
+        } else if (peek().value() == '*') {
+            consume();
+            tokens.push_back({ .type = TokenType::tok_mul });
+        } else if (peek().value() == '/') {
+            consume();
+            tokens.push_back({ .type = TokenType::tok_div });
+        } else if (peek().value() == '#') {
             consume();
 
-            while (peek().value() != '\n') {
+            while (peek().value() != '\n')
                 consume();
-            }
         } else {
-            std::cerr << "Invalid character: ' " << peek().value() << std::endl;
+            std::cerr << "Invalid character: " << peek().value() << std::endl;
             exit(EXIT_SUCCESS);
         }
     }
