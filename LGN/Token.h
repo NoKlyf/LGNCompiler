@@ -8,6 +8,8 @@ enum class TokenType {
     tok_semi,
     tok_lparen,
     tok_rparen,
+    tok_lbrace,
+    tok_rbrace,
     tok_id,
     tok_eq,
     tok_plus,
